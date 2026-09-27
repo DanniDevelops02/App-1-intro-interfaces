@@ -36,3 +36,24 @@ if st.button('Presiona el boton'):
   st.write('Gracias por presionar')
 else:
   st.write('No has presionado aun')
+
+st.subheader("Selectbox")
+in_mod = st.selectbox(
+    "Selecciona la modalidad",
+    ("Audio", "Visual", "Háptico"),
+)
+if in_mod == "Audio":
+    set_mod = "Reproducir audio"
+elif in_mod == "Visual":
+    set_mod = "Reproducir video"
+elif in_mod == "Háptico":
+    set_mod = "Activar vibración"
+st.write(" La acción es:" , set_mod)
+
+
+with st.sidebar:
+    st.subheader("Configura la modalidad")
+    mod_radio = st.radio(
+        "Escoge la modalidad a usar",
+        ("Visual", "Auditiva","Háptica")
+    )
