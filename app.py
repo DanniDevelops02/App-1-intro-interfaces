@@ -59,7 +59,7 @@ st.markdown(banner_html, unsafe_allow_html=True)
 # 3. Textos protegidos (Instrucciones)
 # Usamos un div con una clase específica para proteger este texto de los cambios de color
 st.markdown("""
-<div class="texto-protegido">
+<div>
     <h3>Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.</h3>
     <p>Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.</p>
 </div>
