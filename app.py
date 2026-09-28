@@ -1,23 +1,19 @@
 import streamlit as st
 
-# 1. Configuración de la página en formato ancho
-st.set_page_config(layout="wide", page_title="Interfaces Multimodales")
+# 1. Configuración de la página en formato de columna única centrada
+st.set_page_config(layout="centered", page_title="Interfaces Multimodales")
 
-# 2. CSS y HTML para el Banner Parallax
+# 2. HTML y CSS del Banner Parallax (ahora adaptado a la columna centrada)
 banner_html = """
 <style>
-/* Forzamos que el contenedor principal no tenga padding superior para que el banner toque el borde */
 .block-container {
-    padding-top: 0rem !important;
-    padding-bottom: 0rem !important;
+    padding-top: 2rem !important; /* Añade un poco de aire superior */
 }
 
 .parallax {
-    /* Reemplaza esta URL por la imagen de fondo que prefieras */
+    /* Reemplaza esta URL por tu imagen */
     background-image: url("https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop");
-    
-    /* Altura del banner */
-    min-height: 400px; 
+    min-height: 300px; 
     
     /* Efecto Parallax */
     background-attachment: fixed;
@@ -25,15 +21,16 @@ banner_html = """
     background-repeat: no-repeat;
     background-size: cover;
     
-    /* Centrado del contenido */
     display: flex;
     align-items: center;
     justify-content: center;
     
-    /* Márgenes negativos para expandir de lado a lado en Streamlit */
-    margin-left: -5rem;
-    margin-right: -5rem;
+    /* Ajustes para columna centrada */
     margin-bottom: 2rem;
+    border-radius: 16px;
+    
+    /* Transición suave para cuando se active el filtro blanco y negro */
+    transition: filter 0.5s ease;
 }
 
 .parallax-content {
@@ -46,7 +43,8 @@ banner_html = """
 .parallax-content h1 {
     color: white !important;
     margin: 0;
-    font-size: 3rem;
+    font-size: 2.5rem;
+    transition: color 0.3s ease;
 }
 </style>
 
@@ -58,16 +56,21 @@ banner_html = """
 """
 st.markdown(banner_html, unsafe_allow_html=True)
 
-# 3. Descripción de la aplicación
-st.markdown("### Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.")
-st.write("Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.")
+# 3. Textos protegidos (Instrucciones)
+# Usamos un div con una clase específica para proteger este texto de los cambios de color
+st.markdown("""
+<div class="texto-protegido">
+    <h3>Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.</h3>
+    <p>Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.</p>
+</div>
+""", unsafe_allow_html=True)
 
-# 4. Sección de Radio Buttons para las modalidades
 st.markdown("---")
+
+# 4. Radio buttons verticales (se eliminó horizontal=True)
 modo = st.radio(
     "Selecciona la modalidad principal:",
-    ("Visual", "Auditiva", "Háptica"),
-    horizontal=True
+    ("Visual", "Auditiva", "Háptica")
 )
 
 # 5. Lógica de las modalidades
@@ -75,35 +78,55 @@ if modo == "Visual":
     st.info("Modo Visual activado: Esta es la experiencia de usuario estándar.")
 
 elif modo == "Auditiva":
-    # CSS dinámico para el modo auditivo
+    # CSS dinámico inyectado solo cuando se selecciona "Auditiva"
     auditiva_css = """
     <style>
-    /* Cambiar el color de fondo de toda la aplicación */
-    .stApp {
-        background-color: #363637 !important;
+    /* 1. Aplicar filtro blanco y negro a la imagen del banner */
+    .parallax {
+        filter: grayscale(100%);
     }
     
-    /* Ocultar el texto camuflándolo con el fondo */
-    p, h1, h2, h3, h4, h5, h6, li, label, .stMarkdown {
-        color: #363637 !important;
+    /* 2. Ocultar textos camuflándolos con el color de fondo */
+    p, h1, h2, h3, h4, h5, h6, li, .stMarkdown, .stInfo {
+        /* Se adapta automáticamente al modo oscuro o claro del usuario */
+        color: var(--background-color) !important;
+        background-color: transparent !important;
+        border-color: transparent !important;
         transition: color 0.3s ease-in-out;
     }
     
-    /* Revelar el texto en blanco suave al hacer hover */
-    p:hover, h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, li:hover, label:hover {
-        color: #cecece !important;
+    /* El H1 del banner requiere ser transparente para no verse como un bloque sólido sobre la foto */
+    .parallax-content h1 {
+        color: transparent !important;
     }
     
-    /* Asegurar que los componentes de input mantengan visibilidad básica para poder regresar */
-    .stRadio div[role="radiogroup"] {
-        background-color: transparent !important;
+    /* 3. Revelar el texto al hacer hover */
+    p:hover, h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, li:hover, .stInfo:hover {
+        /* Vuelve al color nativo de Streamlit (blanco en oscuro, negro en claro) */
+        color: var(--text-color) !important;
+    }
+    .parallax-content h1:hover {
+        color: white !important; /* El banner siempre revela texto blanco */
+    }
+    
+    /* 4. EXCEPCIONES: Proteger los elementos que no deben desaparecer */
+    
+    /* Los textos de instrucción superior */
+    .texto-protegido, .texto-protegido p, .texto-protegido h3 {
+        color: var(--text-color) !important;
+    }
+    
+    /* El widget de los Radio Buttons */
+    .stRadio, .stRadio p, .stRadio label, .stRadio div {
+        color: var(--text-color) !important;
     }
     </style>
     """
     st.markdown(auditiva_css, unsafe_allow_html=True)
     
-    st.write("Modo Auditivo activado. Explora la pantalla con el cursor para descubrir el contenido.")
-    st.write("*(Nota: La reproducción de audio al hacer hover se integrará posteriormente)*")
+    # Textos de prueba que sí se ocultarán
+    st.write("Modo Auditivo activado. Explora la pantalla con el cursor para descubrir el contenido oculto.")
+    st.write("*(Nota: El backend de audio se gestionará en un script local)*")
 
 elif modo == "Háptica":
     st.write("Modo Háptico seleccionado (Configuración pendiente para el próximo paso).")
