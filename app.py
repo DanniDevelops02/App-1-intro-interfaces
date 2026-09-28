@@ -1,59 +1,109 @@
 import streamlit as st
-from PIL import Image
 
-st.title("Hola!!! mi Nombre es Danniboy")
+# 1. Configuración de la página en formato ancho
+st.set_page_config(layout="wide", page_title="Interfaces Multimodales")
 
-st.header("En este espacio comenzare a desarrollar mis aplicaciones para interfaces multimodales.")
-st.write("Facilmente puedo realizar backend y frontend.")
-image = Image.open("sergey-kolesov-mermaid-sharpen.jpg")
-st.image(image, caption = "interfaces multimodales")
+# 2. CSS y HTML para el Banner Parallax
+banner_html = """
+<style>
+/* Forzamos que el contenedor principal no tenga padding superior para que el banner toque el borde */
+.block-container {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+}
 
+.parallax {
+    /* Reemplaza esta URL por la imagen de fondo que prefieras */
+    background-image: url("https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop");
+    
+    /* Altura del banner */
+    min-height: 400px; 
+    
+    /* Efecto Parallax */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    /* Centrado del contenido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Márgenes negativos para expandir de lado a lado en Streamlit */
+    margin-left: -5rem;
+    margin-right: -5rem;
+    margin-bottom: 2rem;
+}
 
-texto = st.text_input('Escribe algo', 'Este es mi texto')
-st.write('El texto escrito es: ', texto)
+.parallax-content {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px 40px;
+    border-radius: 12px;
+    text-align: center;
+}
 
-col1, col2 = st.columns(2)
+.parallax-content h1 {
+    color: white !important;
+    margin: 0;
+    font-size: 3rem;
+}
+</style>
 
-with col1:
-  st.subheader('Esta es la primera columna')
-  st.write('Las interfaces multimodales mejoran la experiencia de usuario')
-  resp = st.checkbox('Estoy de acuerdo')
-  if resp:
-    st.write('correcto!')
+<div class="parallax">
+    <div class="parallax-content">
+        <h1>Introducción a interfaces multimodales</h1>
+    </div>
+</div>
+"""
+st.markdown(banner_html, unsafe_allow_html=True)
 
-with col2:
-  st.subheader('Esta es la segunda columna')
-  modo = st.radio ('Que mmodalidad es la principal en tu interfaz?' , ('Visual', 'Auditiva', 'Tactil'))
-  if modo == 'Visual':
-    st.write('La vista es fundamental para tu interfaz')
-  if modo == 'Auditiva':
-    st.write('El audio es fundamental para tu interfaz')
-  if modo == 'Tactil':
-    st.write('El tacto es fundamental para tu interfaz')
+# 3. Descripción de la aplicación
+st.markdown("### Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.")
+st.write("Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.")
 
-st.subheader('Uso de botones')
-if st.button('Presiona el boton'):
-  st.write('Gracias por presionar')
-else:
-  st.write('No has presionado aun')
-
-st.subheader("Selectbox")
-in_mod = st.selectbox(
-    "Selecciona la modalidad",
-    ("Audio", "Visual", "Háptico"),
+# 4. Sección de Radio Buttons para las modalidades
+st.markdown("---")
+modo = st.radio(
+    "Selecciona la modalidad principal:",
+    ("Visual", "Auditiva", "Háptica"),
+    horizontal=True
 )
-if in_mod == "Audio":
-    set_mod = "Reproducir audio"
-elif in_mod == "Visual":
-    set_mod = "Reproducir video"
-elif in_mod == "Háptico":
-    set_mod = "Activar vibración"
-st.write(" La acción es:" , set_mod)
 
+# 5. Lógica de las modalidades
+if modo == "Visual":
+    st.info("Modo Visual activado: Esta es la experiencia de usuario estándar.")
 
-with st.sidebar:
-    st.subheader("Configura la modalidad")
-    mod_radio = st.radio(
-        "Escoge la modalidad a usar",
-        ("Visual", "Auditiva","Háptica")
-    )
+elif modo == "Auditiva":
+    # CSS dinámico para el modo auditivo
+    auditiva_css = """
+    <style>
+    /* Cambiar el color de fondo de toda la aplicación */
+    .stApp {
+        background-color: #363637 !important;
+    }
+    
+    /* Ocultar el texto camuflándolo con el fondo */
+    p, h1, h2, h3, h4, h5, h6, li, label, .stMarkdown {
+        color: #363637 !important;
+        transition: color 0.3s ease-in-out;
+    }
+    
+    /* Revelar el texto en blanco suave al hacer hover */
+    p:hover, h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, li:hover, label:hover {
+        color: #cecece !important;
+    }
+    
+    /* Asegurar que los componentes de input mantengan visibilidad básica para poder regresar */
+    .stRadio div[role="radiogroup"] {
+        background-color: transparent !important;
+    }
+    </style>
+    """
+    st.markdown(auditiva_css, unsafe_allow_html=True)
+    
+    st.write("Modo Auditivo activado. Explora la pantalla con el cursor para descubrir el contenido.")
+    st.write("*(Nota: La reproducción de audio al hacer hover se integrará posteriormente)*")
+
+elif modo == "Háptica":
+    st.write("Modo Háptico seleccionado (Configuración pendiente para el próximo paso).")
