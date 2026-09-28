@@ -56,14 +56,9 @@ banner_html = """
 """
 st.markdown(banner_html, unsafe_allow_html=True)
 
-# 3. Textos protegidos (Instrucciones)
-# Usamos un div con una clase específica para proteger este texto de los cambios de color
-st.markdown("""
-<div>
-    <h3>Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.</h3>
-    <p>Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.</p>
-</div>
-""", unsafe_allow_html=True)
+# 3. Textos de instrucción (Ahora sí se ocultarán en modo auditivo)
+st.markdown("### Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.")
+st.write("Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.")
 
 st.markdown("---")
 
@@ -111,10 +106,6 @@ elif modo == "Auditiva":
     
     /* 4. EXCEPCIONES: Proteger los elementos que no deben desaparecer */
     
-    /* Los textos de instrucción superior */
-    .texto-protegido, .texto-protegido p, .texto-protegido h3 {
-        color: var(--text-color) !important;
-    }
     
     /* El widget de los Radio Buttons */
     .stRadio, .stRadio p, .stRadio label, .stRadio div {
