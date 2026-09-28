@@ -76,40 +76,76 @@ elif modo == "Auditiva":
     # CSS dinámico inyectado solo cuando se selecciona "Auditiva"
     auditiva_css = """
     <style>
-    /* 1. Aplicar filtro blanco y negro a la imagen del banner */
+    /* 1. Filtro blanco y negro para el banner (desaturación visual) */
     .parallax {
         filter: grayscale(100%);
     }
     
-    /* 2. Ocultar textos camuflándolos con el color de fondo */
-    p, h1, h2, h3, h4, h5, h6, li, .stMarkdown, .stInfo {
-        /* Se adapta automáticamente al modo oscuro o claro del usuario */
-        color: var(--background-color) !important;
+    /* Ocultar el recuadro y título del banner hasta hacer hover sobre él */
+    .parallax-content {
         background-color: transparent !important;
-        border-color: transparent !important;
-        transition: color 0.3s ease-in-out;
+        transition: background-color 0.4s ease;
     }
-    
-    /* El H1 del banner requiere ser transparente para no verse como un bloque sólido sobre la foto */
     .parallax-content h1 {
-        color: transparent !important;
+        opacity: 0 !important;
+        transition: opacity 0.4s ease;
+    }
+    .parallax:hover .parallax-content {
+        background-color: rgba(0, 0, 0, 0.7) !important;
+    }
+    .parallax:hover .parallax-content h1 {
+        opacity: 1 !important;
+        color: white !important;
     }
     
-    /* 3. Revelar el texto al hacer hover */
-    p:hover, h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, li:hover, .stInfo:hover {
-        /* Vuelve al color nativo de Streamlit (blanco en oscuro, negro en claro) */
-        color: var(--text-color) !important;
+    /* 2. Ocultar los textos camuflándolos con el fondo */
+    /* Al usar opacity: 0, los textos son 100% invisibles y toman automáticamente el color exacto */
+    /* del fondo, funcionando a la perfección tanto en Modo Claro como en Modo Oscuro de Streamlit */
+    .block-container p,
+    .block-container h1,
+    .block-container h2,
+    .block-container h3,
+    .block-container h4,
+    .block-container h5,
+    .block-container h6,
+    .block-container li {
+        opacity: 0 !important;
+        transition: opacity 0.3s ease-in-out;
     }
-    .parallax-content h1:hover {
-        color: white !important; /* El banner siempre revela texto blanco */
+    
+    /* Atenuar también las líneas divisorias */
+    .block-container hr {
+        opacity: 0.1 !important;
+        transition: opacity 0.3s ease-in-out;
+    }
+    .block-container hr:hover {
+        opacity: 1 !important;
     }
     
-    /* 4. EXCEPCIONES: Proteger los elementos que no deben desaparecer */
+    /* 3. Revelar el texto suavemente al pasar el cursor (hover para exploración auditiva) */
+    .block-container p:hover,
+    .block-container h1:hover,
+    .block-container h2:hover,
+    .block-container h3:hover,
+    .block-container h4:hover,
+    .block-container h5:hover,
+    .block-container h6:hover,
+    .block-container li:hover {
+        opacity: 1 !important;
+    }
     
-    
-    /* El widget de los Radio Buttons */
-    .stRadio, .stRadio p, .stRadio label, .stRadio div {
-        color: var(--text-color) !important;
+    /* 4. EXCEPCIÓN VITAL: Proteger el widget de selección (Radio buttons) */
+    /* Con mayor especificidad garantizamos que las opciones siempre permanezcan visibles y legibles */
+    div[data-testid="stRadio"] p,
+    div[data-testid="stRadio"] label,
+    div[data-testid="stRadio"] span,
+    div[data-testid="stRadio"] div,
+    .stRadio p,
+    .stRadio label,
+    .stRadio span,
+    .stRadio div {
+        opacity: 1 !important;
+        visibility: visible !important;
     }
     </style>
     """
