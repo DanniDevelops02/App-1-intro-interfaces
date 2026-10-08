@@ -12,7 +12,7 @@ banner_html = """
 
 .parallax {
     /* Reemplaza esta URL por tu imagen */
-    background-image: url("https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop");
+    background-image: url("https://unity.com/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Ffuvbjjlp%2Fproduction%2F04dc6a81d4228b64d99b9f8f8f42ac16db790c75-1920x1080.jpg&w=3840&q=75");
     min-height: 300px; 
     
     /* Efecto Parallax */
@@ -57,7 +57,7 @@ banner_html = """
 st.markdown(banner_html, unsafe_allow_html=True)
 
 # 3. Textos de instrucción (Ahora sí se ocultarán en modo auditivo)
-st.markdown("### Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.")
+st.markdown("### Mi nombre es Daniel Flórez, esta es nuestra primera aplicación dónde exploraremos los distintos tipos de interacción.")
 st.write("Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.")
 
 st.markdown("---")
