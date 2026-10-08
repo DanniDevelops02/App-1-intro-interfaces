@@ -57,7 +57,7 @@ banner_html = """
 st.markdown(banner_html, unsafe_allow_html=True)
 
 # 3. Textos de instrucción (Ahora sí se ocultarán en modo auditivo)
-st.markdown("### Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.")
+st.markdown("### Mi nombre es Daniel Flórez. Esta es nuestra primera aplicación y exploraremos los distintos tipos de interacción.")
 st.write("Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.")
 
 st.markdown("---")
@@ -65,7 +65,7 @@ st.markdown("---")
 # 4. Radio buttons verticales (se eliminó horizontal=True)
 modo = st.radio(
     "Selecciona la modalidad principal:",
-    ("Visual", "Auditiva", "Háptica")
+    ("Visual - Modo estandar de interacción", "Auditiva - Explora la pantalla con el cursor para descubrir el contenido oculto.", "Háptica - Modo de interacción con feedback fisico")
 )
 
 # 5. Lógica de las modalidades
