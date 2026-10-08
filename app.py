@@ -46,14 +46,46 @@ banner_html = """
 st.markdown(banner_html, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# NUEVO: 3. Inyección del sistema de audios (Ocultos)
-# Asegúrate de colocar estos .mp3 en la misma carpeta que tu script
+# NUEVO: 3. Inyección del sistema de audios y desbloqueo
 # ---------------------------------------------------------
 audio_system_html = """
-<!-- Etiquetas de audio ocultas que el usuario no ve -->
+<!-- Etiquetas de audio ocultas -->
 <audio id="audio_bienvenida" src="bienvenida.mp3" preload="auto"></audio>
 <audio id="audio_instruccion" src="instruccion.mp3" preload="auto"></audio>
 <audio id="audio_nota" src="nota.mp3" preload="auto"></audio>
+
+<!-- Botón de inicialización y Script de desbloqueo -->
+<div id="audio-unlocker" style="text-align: center; margin-bottom: 20px; padding: 20px; background-color: #2e2e38; border-radius: 8px;">
+    <p style="margin-bottom: 10px; color: white;">Para habilitar la experiencia auditiva, debes inicializar el sistema.</p>
+    <button onclick="unlockAudio()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #4F46E5; color: white; border: none; border-radius: 5px;">
+        Activar Experiencia Auditiva 🔊
+    </button>
+</div>
+
+<script>
+    // Función que se ejecuta con el primer clic del usuario
+    function unlockAudio() {
+        // Obtenemos todos los elementos de audio
+        var audios = document.getElementsByTagName('audio');
+        
+        // El truco de desbloqueo: reproducir y pausar inmediatamente cada audio
+        // Esto le dice al navegador "el usuario solicitó usar el audio"
+        for (var i = 0; i < audios.length; i++) {
+            audios[i].play().then(function() {
+                // Si la promesa se cumple (se permitió reproducir), lo pausamos al instante
+                for (var j = 0; j < audios.length; j++) {
+                     audios[j].pause();
+                     audios[j].currentTime = 0;
+                }
+            }).catch(function(error) {
+                console.log("Error al desbloquear audio:", error);
+            });
+        }
+        
+        // Ocultamos el botón porque ya no es necesario
+        document.getElementById('audio-unlocker').style.display = 'none';
+    }
+</script>
 """
 st.markdown(audio_system_html, unsafe_allow_html=True)
 
