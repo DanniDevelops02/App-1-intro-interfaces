@@ -3,43 +3,32 @@ import streamlit as st
 # 1. Configuración de la página en formato de columna única centrada
 st.set_page_config(layout="centered", page_title="Interfaces Multimodales")
 
-# 2. HTML y CSS del Banner Parallax (ahora adaptado a la columna centrada)
+# 2. HTML y CSS del Banner Parallax 
 banner_html = """
 <style>
 .block-container {
-    padding-top: 2rem !important; /* Añade un poco de aire superior */
+    padding-top: 2rem !important; 
 }
-
 .parallax {
-    /* Reemplaza esta URL por tu imagen */
     background-image: url("https://unity.com/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Ffuvbjjlp%2Fproduction%2F04dc6a81d4228b64d99b9f8f8f42ac16db790c75-1920x1080.jpg&w=3840&q=75");
     min-height: 300px; 
-    
-    /* Efecto Parallax */
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* Ajustes para columna centrada */
     margin-bottom: 2rem;
     border-radius: 16px;
-    
-    /* Transición suave para cuando se active el filtro blanco y negro */
     transition: filter 0.5s ease;
 }
-
 .parallax-content {
     background-color: rgba(0, 0, 0, 0.6);
     padding: 20px 40px;
     border-radius: 12px;
     text-align: center;
 }
-
 .parallax-content h1 {
     color: white !important;
     margin: 0;
@@ -56,19 +45,46 @@ banner_html = """
 """
 st.markdown(banner_html, unsafe_allow_html=True)
 
-# 3. Textos de instrucción (Ahora sí se ocultarán en modo auditivo)
-st.markdown("### Mi nombre es Daniel Flórez, esta es nuestra primera aplicación dónde exploraremos los distintos tipos de interacción.")
-st.write("Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.")
+# ---------------------------------------------------------
+# NUEVO: 3. Inyección del sistema de audios (Ocultos)
+# Asegúrate de colocar estos .mp3 en la misma carpeta que tu script
+# ---------------------------------------------------------
+audio_system_html = """
+<!-- Etiquetas de audio ocultas que el usuario no ve -->
+<audio id="audio_bienvenida" src="bienvenida.mp3" preload="auto"></audio>
+<audio id="audio_instruccion" src="instruccion.mp3" preload="auto"></audio>
+<audio id="audio_nota" src="nota.mp3" preload="auto"></audio>
+"""
+st.markdown(audio_system_html, unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# 4. Textos de instrucción interactivos
+# Reemplazamos st.markdown por HTML inyectado para poder 
+# agregar el atributo 'onmouseover' de JavaScript
+# ---------------------------------------------------------
+textos_interactivos_html = """
+<div class="contenedor-interactivo">
+    <!-- El evento onmouseover busca el ID del audio y le da play -->
+    <h3 onmouseover="document.getElementById('audio_bienvenida').play()">
+        Mi nombre es Daniel Flórez, esta es nuestra primera aplicación dónde exploraremos los distintos tipos de interacción.
+    </h3>
+    
+    <p onmouseover="document.getElementById('audio_instruccion').play()">
+        Selecciona una de las opciones a continuación para experimentar cómo cambia la interfaz según la modalidad.
+    </p>
+</div>
+"""
+st.markdown(textos_interactivos_html, unsafe_allow_html=True)
 
 st.markdown("---")
 
-# 4. Radio buttons verticales (se eliminó horizontal=True)
+# 5. Radio buttons verticales (se eliminó horizontal=True)
 modo = st.radio(
     "Selecciona la modalidad principal:",
     ("Visual", "Auditiva", "Háptica")
 )
 
-# 5. Lógica de las modalidades
+# 6. Lógica de las modalidades
 if modo == "Visual":
     st.info("Modo Visual activado: Esta es la experiencia de usuario estándar.")
 
@@ -99,8 +115,6 @@ elif modo == "Auditiva":
     }
     
     /* 2. Ocultar los textos camuflándolos con el fondo */
-    /* Al usar opacity: 0, los textos son 100% invisibles y toman automáticamente el color exacto */
-    /* del fondo, funcionando a la perfección tanto en Modo Claro como en Modo Oscuro de Streamlit */
     .block-container p,
     .block-container h1,
     .block-container h2,
@@ -108,7 +122,9 @@ elif modo == "Auditiva":
     .block-container h4,
     .block-container h5,
     .block-container h6,
-    .block-container li {
+    .block-container li,
+    .contenedor-interactivo h3,
+    .contenedor-interactivo p {
         opacity: 0 !important;
         transition: opacity 0.3s ease-in-out;
     }
@@ -122,7 +138,7 @@ elif modo == "Auditiva":
         opacity: 1 !important;
     }
     
-    /* 3. Revelar el texto suavemente al pasar el cursor (hover para exploración auditiva) */
+    /* 3. Revelar el texto suavemente al pasar el cursor */
     .block-container p:hover,
     .block-container h1:hover,
     .block-container h2:hover,
@@ -130,12 +146,13 @@ elif modo == "Auditiva":
     .block-container h4:hover,
     .block-container h5:hover,
     .block-container h6:hover,
-    .block-container li:hover {
+    .block-container li:hover,
+    .contenedor-interactivo h3:hover,
+    .contenedor-interactivo p:hover {
         opacity: 1 !important;
     }
     
     /* 4. EXCEPCIÓN VITAL: Proteger el widget de selección (Radio buttons) */
-    /* Con mayor especificidad garantizamos que las opciones siempre permanezcan visibles y legibles */
     div[data-testid="stRadio"] p,
     div[data-testid="stRadio"] label,
     div[data-testid="stRadio"] span,
@@ -151,9 +168,17 @@ elif modo == "Auditiva":
     """
     st.markdown(auditiva_css, unsafe_allow_html=True)
     
-    # Textos de prueba que sí se ocultarán
-    st.write("Modo Auditivo activado. Explora la pantalla con el cursor para descubrir el contenido oculto.")
-    st.write("*(Nota: El backend de audio se gestionará en un script local)*")
+    # ---------------------------------------------------------
+    # NUEVO: Aplicamos la misma lógica interactiva a los textos ocultos
+    # ---------------------------------------------------------
+    textos_ocultos_html = """
+    <div>
+        <p onmouseover="document.getElementById('audio_nota').play()">
+            Modo Auditivo activado. Explora la pantalla con el cursor para descubrir el contenido oculto.
+        </p>
+    </div>
+    """
+    st.markdown(textos_ocultos_html, unsafe_allow_html=True)
 
 elif modo == "Háptica":
     st.write("Modo Háptico seleccionado (Configuración pendiente para el próximo paso).")
